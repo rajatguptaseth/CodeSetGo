@@ -1,5 +1,20 @@
 language: python
 python:
- - "3.6"
+  - "3.6"
+
+dist: xenial
+before_script:
+  - cp .env.example .env
+
+install:
+  - pip3 install pipenv
+  - pipenv install --dev
 script:
- 
+  - source "$(pipenv --venv)"/bin/activate
+  - cd backend
+  - flake8 .
+  - python manage.py makemigrations
+  - python manage.py migrate
+  - cd ../frontend
+  - npm install
+  - npm run build
